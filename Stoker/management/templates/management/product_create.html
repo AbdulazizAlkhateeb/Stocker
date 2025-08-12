@@ -1,0 +1,104 @@
+{% extends "main/base.html" %}
+{% block title %}Add Product{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    {% include "management/sidebar.html" %}
+
+    <div class="col-12 col-md-10 mx-auto py-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Add Product</h5>
+        <a href="{% url 'management:product_list' %}" class="btn btn-light btn-sm">Back</a>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <form action="{% url 'management:product_create' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row gy-3">
+              <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input name="name" type="text" class="form-control" placeholder="Product name" value="{{ request.POST.name }}">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">SKU</label>
+                <input name="sku" type="text" class="form-control" placeholder="Unique code" value="{{ request.POST.sku }}">
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Price</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input name="price" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" value="{{ request.POST.price }}">
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Tax %</label>
+                <input name="tax_rate" type="number" step="0.01" min="0" max="100" class="form-control" placeholder="15.00" value="{{ request.POST.tax_rate|default:'15.00' }}">
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label">Stock</label>
+                <input name="stock" type="number" min="0" class="form-control" placeholder="0" value="{{ request.POST.stock|default:'0' }}">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-select">
+                  <option value="">— Select —</option>
+                  {% for c in categories %}
+                    <option value="{{ c.id }}" {% if request.POST.category == c.id|add:"" %}selected{% endif %}>
+                      {{ c.category_name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Supplier</label>
+                <select name="suppliers" class="form-select">
+                  <option value="">— Select —</option>
+                  {% for supplier in suppliers %}
+                    <option value="{{ supplier.id }}" {% if request.POST.suppliers == supplier.id|add:"" %}selected{% endif %}>
+                      {{ supplier.supplier_name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea name="description" rows="3" class="form-control" placeholder="Short description">{{ request.POST.description }}</textarea>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Image</label>
+                <input name="image" type="file" accept="image/*" class="form-control">
+              </div>
+
+              <div class="col-md-6 d-flex align-items-center">
+                <div class="form-check mt-4">
+                  <input name="is_active" type="checkbox" class="form-check-input" id="is_active" {% if request.method != 'POST' or request.POST.is_active %}checked{% endif %}>
+                  <label class="form-check-label" for="is_active">Active</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-3">
+              <a href="{% url 'management:product_list' %}" class="btn btn-light">Cancel</a>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

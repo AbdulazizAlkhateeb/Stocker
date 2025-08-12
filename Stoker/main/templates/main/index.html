@@ -1,0 +1,90 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+
+
+
+<div class="min-vh-100">
+<div class="auth-box d-flex">
+  <div class="col-md-6 left-panel d-flex flex-column justify-content-center">
+    <h2 class="mb-1">Welcome</h2>
+    <p class="mb-4">Join Stoker dashboard To track your stock.</p>
+    <ul class="list-unstyled mt-2 mb-0">
+      <li class="mb-2"><i class="bi bi-check-circle-fill icon-check me-2"></i>Secure & Reliable</li>
+      <li class="mb-2"><i class="bi bi-check-circle-fill icon-check me-2"></i>24/7 Support</li>
+      <li><i class="bi bi-check-circle-fill icon-check me-2"></i>Easy to Use</li>
+    </ul>
+  </div>
+
+  <div class="col-md-6 form-section">
+    <div class="form-toggle align-self-start">
+      <button id="loginBtn" class="active" type="button" onclick="switchForm('login')">Login</button>
+      <button id="signupBtn" type="button" onclick="switchForm('signup')">Sign Up</button>
+    </div>
+
+    <div class="form-viewport flex-grow-1">
+      <!-- Login -->
+      <form id="loginForm" action="{% url 'main:sign_in' %}" method="POST" class="h-100 d-flex flex-column">
+        {% csrf_token %}
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="User name" name="username" required>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" placeholder="Password" name="password" required>
+        </div>
+        <div class="mt-auto">
+          <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        </div>
+      </form>
+
+      <!-- Sign Up -->
+      <form id="signupForm" class="d-none h-100 d-flex flex-column" action="{% url 'main:sign_up' %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="User name" name="username" required>
+        </div>
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="First name" name="first_name" required>
+        </div>
+        <div class="mb-3">
+          <input type="text" class="form-control" placeholder="Last name" name="last_name" required>
+        </div>
+        <div class="mb-3">
+          <input type="email" class="form-control" placeholder="Email" name="email" required>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" placeholder="Password" name="password" required>
+        </div>
+        <div class="mt-auto">
+          <button type="submit" class="btn btn-primary w-100">Create Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+  function switchForm(form) {
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    if (form === 'login') {
+      loginBtn.classList.add('active');
+      signupBtn.classList.remove('active');
+      loginForm.classList.remove('d-none');
+      signupForm.classList.add('d-none');
+    } else {
+      signupBtn.classList.add('active');
+      loginBtn.classList.remove('active');
+      signupForm.classList.remove('d-none');
+      loginForm.classList.add('d-none');
+    }
+  }
+</script>
+{% endblock %}
+

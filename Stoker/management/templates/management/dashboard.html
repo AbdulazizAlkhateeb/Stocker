@@ -1,0 +1,84 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            {% include 'management/sidebar.html' %}
+
+                <!-- Dashboard Content -->
+                <div class="container-fluid p-4">
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Total Users</h6>
+                                            <h3>12,847</h3>
+                                            <small><i class="fas fa-arrow-up"></i> +12% from last month</small>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="fas fa-users fs-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card success">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Revenue</h6>
+                                            <h3>$98,765</h3>
+                                            <small><i class="fas fa-arrow-up"></i> +8% from last month</small>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="fas fa-dollar-sign fs-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card warning">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Orders</h6>
+                                            <h3>1,234</h3>
+                                            <small><i class="fas fa-arrow-down text-warning"></i> -3% from last month</small>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="fas fa-shopping-bag fs-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card stat-card info">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Conversion</h6>
+                                            <h3>3.2%</h3>
+                                            <small><i class="fas fa-arrow-up"></i> +0.5% from last month</small>
+                                        </div>
+                                        <div class="align-self-center">
+                                            <i class="fas fa-percentage fs-1"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+{% endblock %}

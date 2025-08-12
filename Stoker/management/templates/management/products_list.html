@@ -1,0 +1,155 @@
+{% extends 'main/base.html' %}
+{% block title %}Products Page{% endblock %}
+{% block content %}
+
+<div class="container-fluid px-0">
+  <div class="row">
+    {% include "management/sidebar.html" %}
+
+    <div class="col-12 p-4">
+
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Products</h5>
+        <a href="{% url 'management:product_create' %}" class="btn btn-primary btn-sm">
+          <i class="bi bi-plus-lg me-1"></i>Add New
+        </a>
+      </div>
+
+      <!-- Filters -->
+      <form method="get" class="row g-2 align-items-end mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Search (product or supplier)</label>
+          <input type="search" name="search" value="{{ search }}" class="form-control"
+                 placeholder="Type product or supplier name">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Category</label>
+          <select name="category" class="form-select" onchange="this.form.submit()">
+            <option value="">All categories</option>
+            {% for c in categories %}
+              <option value="{{ c.id }}" {% if selected_category == c.id|stringformat:"s" %}selected{% endif %}>
+                {{ c.category_name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+          <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+
+        <div class="col-12">
+          <a href="{% url 'management:product_list' %}" class="small text-decoration-none">Reset</a>
+        </div>
+      </form>
+
+      <!-- Table -->
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle w-100">
+              <thead class="table-light">
+                <tr>
+                  <th>SKU</th>
+                  <th>Product</th>
+                  <th class="text-end">Price</th>
+                  <th>Tax %</th>
+                  <th>Stock</th>
+                  <th>Active</th>
+                  <th>Category</th>
+                  <th>Supplier</th>
+                  <th>Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr>
+                  <td>{{ product.sku }}</td>
+                  <td class="d-flex align-items-center gap-2">
+                    {% if product.image %}
+                      <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                           class="rounded-circle" style="width:36px;height:36px;object-fit:cover;">
+                    {% endif %}
+                    <span>{{ product.name }}</span>
+                  </td>
+                  <td class="text-end">${{ product.price|floatformat:2 }}</td>
+                  <td>{{ product.tax_rate|floatformat:0 }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td>
+                    {% if product.is_active %}
+                      <span class="badge bg-success">Yes</span>
+                    {% else %}
+                      <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ product.category.category_name|default:"—" }}</td>
+                  <td>
+                    {% with sups=product.suppliers.all %}
+                      {% if sups %}{{ sups.0.supplier_name }}{% else %}—{% endif %}
+                    {% endwith %}
+                  </td>
+                  <td>{{ product.updated_at|date:"Y-m-d" }}</td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                      <a href="#" class="btn btn-outline-primary" title="View"><i class="bi bi-eye"></i></a>
+                      <a href="#" class="btn btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></a>
+                      <button type="button" class="btn btn-outline-danger"
+                              data-bs-toggle="modal"
+                              data-bs-target="#confirmDelete"
+                              data-delete-url="{% url 'management:product_delete_view' product.id %}"
+                              data-item-name="{{ product.name }}"
+                              title="Delete">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="10" class="text-center text-muted py-5">No products found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global delete modal (one per page) -->
+      <div class="modal fade" id="confirmDelete" data-bs-scroll="true" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <form method="post" class="modal-content">
+            {% csrf_token %}
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title">Delete Product</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              Delete “<span id="del-item-name"></span>”?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script>
+      document.getElementById('confirmDelete').addEventListener('show.bs.modal', function (e) {
+        const btn = e.relatedTarget;
+        const url = btn.getAttribute('data-delete-url');
+        const name = btn.getAttribute('data-item-name') || '';
+        this.querySelector('form').action = url;
+        this.querySelector('#del-item-name').textContent = name;
+      });
+      </script>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
